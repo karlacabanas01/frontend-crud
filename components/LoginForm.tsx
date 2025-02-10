@@ -3,12 +3,6 @@ import api from "@/service/api";
 import ProductForm from "./ProductForm";
 import ProductList from "./ProductList";
 
-// ✅ Definición de la respuesta esperada del login
-interface LoginResponse {
-  token: string;
-  message: string;
-}
-
 interface User {
   id: number;
   name: string;
@@ -17,7 +11,7 @@ interface User {
 }
 
 export default function UserList() {
-  const [users, setUsers] = useState<User[]>([]);
+  const [, setUsers] = useState<User[]>([]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [token, setToken] = useState<string | null>(null);
@@ -48,12 +42,16 @@ export default function UserList() {
     }
 
     try {
-      const response = await api.post("/auth/login", { email, password });
+      const response = await api.post<{ token: string }>("/auth/login", {
+        email,
+        password,
+      });
 
       const authToken = response.data.token;
       setToken(authToken);
       localStorage.setItem("token", authToken);
       setError("");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error("Error al iniciar sesión:", err.response?.data);
       setError(
