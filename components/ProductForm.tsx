@@ -8,20 +8,30 @@ interface ProductFormInputs {
   price: number;
 }
 
-export default function ProductForm() {
+export default function ProductForm({
+  refreshProducts,
+}: {
+  refreshProducts: () => void;
+}) {
   const { register, handleSubmit, reset } = useForm<ProductFormInputs>();
 
   const onSubmit = async (data: ProductFormInputs) => {
     try {
       const token = localStorage.getItem("token");
-      await api.post("/products", data, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.post(
+        "/products",
+        { ...data, price: Number(data.price) }, // ✅ Convierte el precio a número
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       reset();
       alert("Producto creado con éxito");
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error: unknown) {
-      alert("Error al crear el producto");
+      refreshProducts(); // ✅ Recargar la lista de productos
+    } catch (error) {
+      if (error instanceof Error) {
+        alert("Error al crear el producto " + error.message);
+      } else {
+        alert("Error al crear el producto");
+      }
     }
   };
 
