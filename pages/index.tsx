@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Navbar from "@/components/Navbar";
-import "@/styles/globals.css";
 
 export default function Home() {
   const router = useRouter();

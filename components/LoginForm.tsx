@@ -17,6 +17,7 @@ export default function LoginPage() {
       const user = await login(email, password);
       console.log("Usuario autenticado:", user);
       authLogin(user);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message || "Error en la autenticación");
     }

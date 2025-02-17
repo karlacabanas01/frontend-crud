@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 CRUD con Next.js, Node.js, MySQL y AWS
 
-## Getting Started
+## 📌 Descripción
 
-First, run the development server:
+### Este proyecto es una aplicación CRUD (Create, Read, Update, Delete) que utiliza Next.js para el frontend y Node.js con Express para el backend, con una base de datos MySQL alojada en AWS RDS. La aplicación está desplegada en un servidor EC2 de AWS, asegurando escalabilidad y alta disponibilidad.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🌍 Tecnologías utilizadas
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🖥️ Frontend (Repositorio en GitHub)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Next.js (Framework basado en React)
+Tailwind CSS (Para estilos modernos y eficientes)
+Axios (Manejo de peticiones HTTP)
+React Hook Form (Manejo de formularios)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Backend (Repositorio en GitHub)
 
-## Learn More
+Node.js con Express.js (Servidor backend)
+MySQL (Base de datos en AWS RDS)
+Sequelize (ORM para MySQL)
+Cors & dotenv (Configuración de seguridad y variables de entorno)
+JSON Web Token (JWT) (Para autenticación segura)
 
-To learn more about Next.js, take a look at the following resources:
+## ☁️ Infraestructura en AWS
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+AWS RDS (MySQL) → Base de datos administrada
+AWS EC2 → Servidor donde se ejecuta la aplicación
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🏗️ Instalación y configuración
 
-## Deploy on Vercel
+🔹 Requisitos previos
+Asegúrate de tener instalado:
+Node.js
+MySQL (o acceso a la base de datos en AWS RDS)
+Git
+PM2 (para mantener el backend en ejecución en EC2)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## ⚙️ Backend - Configuración y despliegue en EC2
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Conectar al servidor EC2
+
+ssh -i "tu-clave.pem" ubuntu@tu-ip-publica
+
+### Clonar el repositorio
+
+git clone https://github.com/karlacabanas01/crud-node-mysql.git
+cd crud-node-mysql
+
+### Instalar dependencias
+
+npm install
+
+### Configurar las variables de entorno en .env
+
+DB_HOST=crud-app-db.cmvhpzzezajb.us-east-2.rds.amazonaws.com
+DB_USER=admin
+DB_PASSWORD=<tu-contraseña-segura>
+DB_NAME=crud_app
+DB_PORT=3306
+JWT_SECRET=<clave-secreta-para-tokens>
+
+### Iniciar el servidor backend en el puerto 3000 con PM2
+
+pm2 start server.js --name "crud-backend" -- --port 3000
+pm2 save
+pm2 startup
+
+## 🎨 Frontend - Configuración y despliegue en EC2
+
+### Conectar al servidor EC2
+
+ssh -i "tu-clave.pem" ubuntu@tu-ip-publica
+
+### Clonar el repositorio
+
+git clone https://github.com/karlacabanas01/frontend-crud.git
+cd frontend-crud
+
+### Instalar dependencias
+
+npm install
+
+### Configurar variables de entorno en .env.local
+
+NEXT_PUBLIC_API_URL=http://tu-ip-publica:3000
+Construir e iniciar el frontend en el puerto 3001
+
+## Autor
+
+📌 Desarrollado por @karlacabanas01 🚀

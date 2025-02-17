@@ -11,15 +11,20 @@ const api = axios.create({
 });
 
 // Definimos el tipo esperado en el payload del token
+interface LoginResponse {
+  token: string;
+}
 interface TokenPayload {
   id: number;
-  name: string;
   email: string;
+  name: string;
 }
-
 export const login = async (email: string, password: string) => {
   try {
-    const response = await api.post("/auth/login", { email, password });
+    const response = await api.post<LoginResponse>("/auth/login", {
+      email,
+      password,
+    });
 
     console.log("Respuesta completa del login:", response.data);
 

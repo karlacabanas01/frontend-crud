@@ -7,18 +7,7 @@ import {
   ReactNode,
 } from "react";
 import { useRouter } from "next/navigation";
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-}
-
-interface AuthContextType {
-  user: User | null;
-  login: (user: User) => void;
-  logout: () => void;
-}
+import { AuthContextType, User } from "@/types/User";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -39,9 +28,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
 
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-      console.log("Usuario cargado desde localStorage:", storedUser);
+    if (storedUser && storedUser !== "undefined") {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+        console.log("Usuario cargado desde localStorage:", parsedUser);
+      } catch (error) {
+        console.error("Error al parsear el usuario desde localStorage:", error);
+        localStorage.removeItem("user"); // Limpia el localStorage si está corrupto
+      }
+    } else {
+      console.log("No hay usuario almacenado en localStorage.");
     }
   }, []);
 
