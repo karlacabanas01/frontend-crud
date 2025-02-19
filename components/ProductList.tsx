@@ -1,7 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Product } from "../types/Product"; // Importa la interfaz
+import { Product } from "../types/Product";
 import api from "@/service/api";
+import { MdDelete, MdEdit } from "react-icons/md";
+import ProductAddModal from "./ProductAddModal";
 
 export default function ProductList() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -10,6 +12,7 @@ export default function ProductList() {
   const [updatedDescription, setUpdatedDescription] = useState("");
   const [updatedPrice, setUpdatedPrice] = useState("");
 
+  const [isOpen, setIsOpen] = useState(false);
   const fetchProducts = async () => {
     try {
       const response = await api.get<Product[]>("/products");
@@ -26,7 +29,7 @@ export default function ProductList() {
   const handleDelete = async (id: number) => {
     try {
       await api.delete(`/products/${id}`);
-      fetchProducts(); // ✅ Recarga productos después de eliminar
+      fetchProducts(); // ✅ Recarga de productos después de eliminar
     } catch (error) {
       console.error("Error al eliminar producto:", error);
     }
@@ -59,32 +62,50 @@ export default function ProductList() {
   };
 
   return (
-    <div className="p-4 bg-white shadow-md rounded-md mt-4">
-      <h2 className="text-xl font-bold mb-4">Productos Disponibles</h2>
+    <div className="p-4 mb-2 bg-white shadow-md rounded-md mt-4">
+      <div className="flex justify-between">
+        <h2 className="text-xl font-bold mb-4">Productos Disponibles</h2>
+        <button
+          onClick={() => setIsOpen(true)}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Agregar Producto
+        </button>
+      </div>
+
       <ul>
         {products.map((product) => (
           <li
             key={product.id}
             className="border-b py-2 flex justify-between items-center"
           >
-            <div>
-              <strong>{product.name}</strong> - {product.description} - $
-              {product.price}
+            <div className="p-2 ¡">
+              <li>
+                <strong>{product.name}</strong>
+              </li>
+              <li>{product.description}</li>
+              <li>
+                {new Intl.NumberFormat("es-CL", {
+                  style: "currency",
+                  currency: "CLP",
+                }).format(product.price)}
+              </li>
             </div>
+
             <div className="space-x-2">
               <button
                 onClick={() => handleEdit(product)}
-                className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+                className="bg-yellow-500 text-white p-2 rounded-full hover:bg-yellow-600"
                 style={{ pointerEvents: "auto" }}
               >
-                Actualizar
+                <MdEdit />
               </button>
               <button
                 onClick={() => handleDelete(product.id)}
-                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                className="bg-red-500 text-white p-2 rounded-full hover:bg-red-600"
                 style={{ pointerEvents: "auto" }}
               >
-                Eliminar
+                <MdDelete />
               </button>
             </div>
           </li>
@@ -131,6 +152,8 @@ export default function ProductList() {
           </div>
         </div>
       )}
+
+      <ProductAddModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </div>
   );
 }

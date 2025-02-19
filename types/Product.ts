@@ -4,3 +4,9 @@ export interface Product {
   description: string;
   price: number;
 }
+
+export interface ProductFormInputs {
+  name: string;
+  description: string;
+  price: number;
+}

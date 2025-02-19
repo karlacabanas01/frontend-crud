@@ -6,6 +6,17 @@ export interface User {
 
 export interface AuthContextType {
   user: User | null;
-  login: (user: User) => void;
+  userName: string | null;
+  login: (email: string, password: string) => Promise<void>; // <-- Corrección aquí
   logout: () => void;
+}
+
+export interface LoginResponse {
+  token: string;
+  user: User;
+}
+export interface TokenPayload {
+  id: number;
+  email: string;
+  name: string;
 }

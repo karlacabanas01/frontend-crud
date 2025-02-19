@@ -5,9 +5,11 @@ import {
   useState,
   useEffect,
   ReactNode,
+  useMemo,
 } from "react";
 import { useRouter } from "next/navigation";
 import { AuthContextType, User } from "@/types/User";
+import { login as apiLogin, logout as apiLogout } from "@/service/api";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -22,45 +24,65 @@ export function useAuth() {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  console.log("AuthContext cargado"); // 🚀 Este mensaje debería aparecer
-
+  // Cargar usuario desde localStorage en el primer render
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-
-    if (storedUser && storedUser !== "undefined") {
+    if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
         setUser(parsedUser);
-        console.log("Usuario cargado desde localStorage:", parsedUser);
+        console.log("✅ Usuario cargado desde localStorage:", parsedUser);
       } catch (error) {
-        console.error("Error al parsear el usuario desde localStorage:", error);
-        localStorage.removeItem("user"); // Limpia el localStorage si está corrupto
+        console.error("❌ Error al cargar el usuario:", error);
+        localStorage.removeItem("user");
       }
-    } else {
-      console.log("No hay usuario almacenado en localStorage.");
     }
+    setLoading(false);
   }, []);
 
-  const login = (userData: User) => {
-    console.log("Guardando usuario en el contexto:", userData);
-    setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
+  // Función de login
+  const login = async (email: string, password: string) => {
+    try {
+      console.log("📌 Enviando credenciales al backend:", { email, password });
 
-    console.log("Usuario autenticado, redirigiendo a /products...");
-    router.push("/products");
+      const { user, token } = await apiLogin(email, password);
+
+      console.log("✅ Usuario autenticado:", user);
+
+      setUser(user);
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", token);
+
+      router.push("/products");
+    } catch (error) {
+      console.error("❌ Error en login:", error);
+    }
   };
 
+  // Función de logout
   const logout = () => {
+    console.log("🚪 Cerrando sesión...");
     setUser(null);
     localStorage.removeItem("user");
-    console.log("Usuario deslogueado, redirigiendo a /login...");
-    router.push("/login");
+    localStorage.removeItem("token");
+    apiLogout(); // Asegurar que la API de logout se ejecuta
+    router.push("/"); // Redirigir a la página principal
   };
 
+  const userName = user?.name || null;
+
+  const contextValue = useMemo(
+    () => ({ user, userName, login, logout }),
+    [user]
+  );
+
+  if (loading) {
+    return <div>Cargando...</div>;
+  }
+
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 }

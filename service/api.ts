@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { LoginResponse } from "@/types/User";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
+// import { jwtDecode } from "jwt-decode";
 
 const api = axios.create({
   baseURL: "http://3.23.94.254:3000/api",
@@ -10,36 +11,28 @@ const api = axios.create({
   },
 });
 
-// Definimos el tipo esperado en el payload del token
-interface LoginResponse {
-  token: string;
-}
-interface TokenPayload {
-  id: number;
-  email: string;
-  name: string;
-}
 export const login = async (email: string, password: string) => {
+  if (!email?.trim() || !password?.trim()) {
+    throw new Error("❌ Error: Las credenciales no pueden estar vacías.");
+  }
+
   try {
-    const response = await api.post<LoginResponse>("/auth/login", {
+    console.log("📌 Enviando credenciales:", { email, password });
+
+    const { data } = await api.post<LoginResponse>("/auth/login", {
       email,
       password,
     });
 
-    console.log("Respuesta completa del login:", response.data);
+    if (!data.token || !data.user)
+      throw new Error("No se recibió un token o usuario en la respuesta.");
 
-    if (!response.data.token) {
-      throw new Error("No se recibió un token en la respuesta.");
-    }
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
 
-    // ⚠️ Decodificamos el token para obtener los datos del usuario
-    const decoded: TokenPayload = jwtDecode(response.data.token);
-
-    console.log("Usuario decodificado del token:", decoded);
-
-    return decoded; // Devolvemos el usuario decodificado
+    return { user: data.user, token: data.token };
   } catch (error: any) {
-    console.error("Error en login:", error.response?.data || error.message);
+    console.error("❌ Error en login:", error.response?.data || error.message);
     throw new Error(
       error.response?.data?.message || "Error en la autenticación"
     );
@@ -66,6 +59,11 @@ export const register = async (
     );
     throw error;
   }
+};
+
+export const logout = () => {
+  localStorage.removeItem("user");
+  localStorage.removeItem("token");
 };
 
 export default api;
