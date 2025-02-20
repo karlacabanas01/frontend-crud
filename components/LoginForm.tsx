@@ -23,7 +23,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="max-w-sm w-full bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold mb-4 text-center">Iniciar Sesión</h2>
         <form onSubmit={handleLogin} className="space-y-4">
@@ -45,7 +45,7 @@ export default function LoginPage() {
           />
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+            className="w-full bg-primary text-white py-2 rounded hover:bg-secondary hover:text-textSecondary transition"
           >
             Iniciar Sesión
           </button>
