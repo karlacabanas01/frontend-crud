@@ -1,56 +1,28 @@
 import { useState } from "react";
-import api from "@/service/api";
+import { register } from "@/service/api";
 
 interface RegisterFormProps {
-  onRegisterSuccess: (token: string) => void;
   toggleForm: () => void;
 }
-interface CustomAxiosError {
-  response?: {
-    data?: {
-      error?: string;
-    };
-  };
-}
-export default function RegisterForm({
-  onRegisterSuccess,
-  toggleForm,
-}: RegisterFormProps) {
-  const [name, setName] = useState("");
+export default function RegisterForm({ toggleForm }: RegisterFormProps) {
+  const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (!name || !email || !password) {
-      setMessage("Todos los campos son obligatorios para registrarse.");
-      return;
-    }
+    setMessage(""); // 🔹 Limpiar errores previos
 
     try {
-      const response = await api.post<{ token: string }>("/auth/register", {
-        name,
-        email,
-        password,
-      });
-
-      setMessage("Registro exitoso 🎉");
-      localStorage.setItem("message", "Registro exitoso 🎉"); // ✅ Guardar mensaje en localStorage
-
-      setTimeout(() => {
-        onRegisterSuccess(response.data.token);
-      }, 2000); // Espera 2 segundos antes de cambiar la vista
-    } catch (error: unknown) {
-      const axiosError = error as CustomAxiosError;
-      if (axiosError.response?.data?.error) {
-        console.error("Error de Axios:", axiosError.response.data.error);
-        setMessage(axiosError.response.data.error);
-      } else {
-        console.error("Error desconocido:", error);
-        setMessage("Error inesperado.");
-      }
+      const response = await register(username, email, password);
+      console.log("✅ Usuario registrado:", response);
+      setMessage("Registro exitoso. Ahora puedes iniciar sesión.");
+    } catch (err) {
+      console.error("❌ Error en el registro:", err);
+      setMessage(
+        err instanceof Error ? err.message : "Error desconocido en el registro."
+      );
     }
   };
 
@@ -62,8 +34,8 @@ export default function RegisterForm({
         <form onSubmit={handleRegister} className="space-y-4">
           <input
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={username}
+            onChange={(e) => setUserName(e.target.value)}
             placeholder="Nombre completo"
             className="w-full p-2 border rounded"
             required

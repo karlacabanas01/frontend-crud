@@ -17,8 +17,12 @@ export default function ProductList() {
     try {
       const response = await api.get<Product[]>("/products");
       setProducts(response.data);
-    } catch (error) {
-      console.error("Error al obtener productos:", error);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.error(
+        "❌ Error al obtener productos:",
+        error.response?.data || error.message
+      );
     }
   };
 
@@ -58,6 +62,33 @@ export default function ProductList() {
       setEditingProduct(null);
     } catch (error) {
       console.error("Error al actualizar producto:", error);
+    }
+  };
+
+  const handleAddProduct = async (newProduct: {
+    name: string;
+    description: string;
+    price: number;
+  }) => {
+    try {
+      const token = localStorage.getItem("token"); // Asegúrate de que hay token
+      if (!token) throw new Error("No hay token disponible");
+
+      const response = await api.post(
+        "/products",
+        { ...newProduct },
+        { headers: { Authorization: `Bearer ${token}` } } // ✅ Envía el token en la cabecera
+      );
+
+      console.log("✅ Producto agregado:", response.data);
+      fetchProducts(); // Recargar la lista de productos
+      setIsOpen(false); // Cerrar modal
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: Error | any) {
+      console.error(
+        "❌ Error al agregar producto:",
+        error.response?.data || error.message
+      );
     }
   };
 
@@ -153,7 +184,11 @@ export default function ProductList() {
         </div>
       )}
 
-      <ProductAddModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <ProductAddModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        onAddProduct={handleAddProduct}
+      />
     </div>
   );
 }

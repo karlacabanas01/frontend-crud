@@ -11,7 +11,7 @@ export default function Navbar() {
         <ul className="flex space-x-4">
           {user ? (
             <>
-              <li className="font-bold">Hola, {user.name}!</li>
+              <li className="font-bold">Hola, {user.username}!</li>
               <li>
                 <Link href="/products" className="hover:underline">
                   Mis Productos

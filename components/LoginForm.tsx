@@ -11,14 +11,24 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError("");
+    setError(""); // 🔹 Limpiar errores previos
 
     try {
-      const user = await login(email, password);
-      console.log("Usuario autenticado:", user);
-      authLogin(email, password);
+      const response = await login(email, password);
+
+      if (!response || !response.user) {
+        throw new Error(
+          "Credenciales inválidas. Verifica tu email y contraseña."
+        );
+      }
+
+      console.log("✅ Usuario autenticado:", response);
+      authLogin(response.user, response.token);
     } catch (err: unknown) {
-      setError((err as Error).message || "Error en la autenticación");
+      console.error("❌ Error en el login:", err);
+      setError(
+        (err as Error).message || "Error desconocido en la autenticación."
+      );
     }
   };
 

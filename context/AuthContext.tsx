@@ -9,7 +9,6 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import { AuthContextType, User } from "@/types/User";
-import { login as apiLogin, logout as apiLogout } from "@/service/api";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -24,58 +23,53 @@ export function useAuth() {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Cargar usuario desde localStorage en el primer render
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    if (storedUser) {
+    const storedToken = localStorage.getItem("token");
+
+    if (storedUser && storedToken) {
       try {
         const parsedUser = JSON.parse(storedUser);
         setUser(parsedUser);
+        setToken(storedToken);
         console.log("✅ Usuario cargado desde localStorage:", parsedUser);
       } catch (error) {
         console.error("❌ Error al cargar el usuario:", error);
         localStorage.removeItem("user");
+        localStorage.removeItem("token");
       }
     }
     setLoading(false);
   }, []);
 
   // Función de login
-  const login = async (email: string, password: string) => {
-    try {
-      console.log("📌 Enviando credenciales al backend:", { email, password });
+  const login = (user: User, token: string) => {
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
 
-      const { user, token } = await apiLogin(email, password);
-
-      console.log("✅ Usuario autenticado:", user);
-
-      setUser(user);
-      localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("token", token);
-
-      router.push("/products");
-    } catch (error) {
-      console.error("❌ Error en login:", error);
-    }
+    setUser(user);
+    setToken(token);
   };
 
   // Función de logout
   const logout = () => {
-    console.log("🚪 Cerrando sesión...");
-    setUser(null);
-    localStorage.removeItem("user");
     localStorage.removeItem("token");
-    apiLogout(); // Asegurar que la API de logout se ejecuta
-    router.push("/"); // Redirigir a la página principal
+    localStorage.removeItem("user");
+
+    setUser(null);
+    setToken(null);
+    router.push("/login"); // Redirigir a login tras cerrar sesión
   };
 
-  const userName = user?.name || null;
+  const userName = user?.username || null;
 
   const contextValue = useMemo(
-    () => ({ user, userName, login, logout }),
-    [user]
+    () => ({ user, token, userName, login, logout }),
+    [user, token]
   );
 
   if (loading) {
@@ -86,3 +80,5 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 }
+
+export default AuthProvider;

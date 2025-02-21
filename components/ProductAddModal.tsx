@@ -1,31 +1,71 @@
-import React from "react";
-import ProductForm from "./ProductForm";
-import { IoClose } from "react-icons/io5";
+import { useState } from "react";
 
-interface ModalProps {
+interface ProductAddModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onAddProduct: (product: {
+    name: string;
+    description: string;
+    price: number;
+  }) => void;
 }
 
-const ProductAddModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
+export default function ProductAddModal({
+  isOpen,
+  onClose,
+  onAddProduct,
+}: ProductAddModalProps) {
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim() || !description.trim() || !price.trim()) {
+      alert("Todos los campos son obligatorios");
+      return;
+    }
+
+    onAddProduct({
+      name,
+      description,
+      price: parseFloat(price),
+    });
+
+    setName("");
+    setDescription("");
+    setPrice("");
+  };
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-        <header className="flex justify-end">
-          <button
-            className="bg-red-600 text-white p-2 rounded-full  hover:bg-gray-700 transition"
-            onClick={onClose}
-          >
-            <IoClose size={22} />
-          </button>
-        </header>
-        <ProductForm refreshProducts={() => {}} />
-        <div className="mt-4 flex justify-end"></div>
+    <div className="modal">
+      <div className="modal-content">
+        <h2>Agregar Producto</h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Nombre"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Descripción"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+          <input
+            type="number"
+            placeholder="Precio"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+          />
+          <button type="submit">Agregar</button>
+          <button onClick={onClose}>Cerrar</button>
+        </form>
       </div>
     </div>
   );
-};
-
-export default ProductAddModal;
+}
