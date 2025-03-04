@@ -26,8 +26,8 @@
 
 ### Clonar el repositorio
 
-git clone https://github.com/karlacabanas01/frontend-crud.git
-cd frontend-crud
+- git clone https://github.com/karlacabanas01/frontend-crud.git
+- cd frontend-crud
 
 ### Instalar dependencias
 
@@ -35,8 +35,8 @@ npm install
 
 ### Configurar variables de entorno en .env.local
 
-NEXT_PUBLIC_API_URL=http://localhost:3001
-Construir e iniciar el frontend en el puerto 3001
+- NEXT_PUBLIC_API_URL=http://localhost:3001
+- Construir e iniciar el frontend en el puerto 3001
 
 ## Para ejecutar el proyecto
 
