@@ -2,7 +2,7 @@ import { LoginResponse, RegisterResponse } from "@/types/User";
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:3000/api/auth",
+  baseURL: process.env.NEXT_PUBLIC_API_URL+"/api/auth",
 });
 interface AxiosError {
   message: string;
