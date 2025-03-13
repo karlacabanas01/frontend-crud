@@ -1,0 +1,19 @@
+services:
+  frontend:
+    build: .
+    container_name: nabi_frontend
+    restart: always
+    ports:
+      - "3001:3001"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+    networks:
+      - nabi-network
+
+networks:
+  nabi-network:
+    external: true
