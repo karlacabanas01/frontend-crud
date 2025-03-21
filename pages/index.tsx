@@ -1,12 +1,15 @@
 import Navbar from "@/components/Navbar";
+import Image from "next/image";
 
 export default function Home() {
   return (
     <div>
       <Navbar />
+
       <div className="h-screen flex flex-col items-center justify-center bg-gray-100">
-        <h1 className="text-3xl font-bold text-textPrimary mb-6">
-          Colores de la Paleta
+        <Image src="/img/2.png" alt="Logo Nabi" width={200} height={200} />
+        <h1 className="text-3xl font-bold text-gray-800 mb-6 pt-4">
+          Paleta de colores
         </h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-4xl">
           <div className="bg-primary p-4 rounded-lg shadow-md">

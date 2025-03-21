@@ -1,13 +1,15 @@
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
+import Image from "next/image";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
 
   return (
-    <nav className="bg-primary text-white p-4">
+    <nav className="bg-primary text-white p-2">
       <div className="container mx-auto flex justify-between items-center">
-        <h1 className="text-xl font-bold">Mi App</h1>
+        <Image src="/img/3.png" alt="Logo Nabi" width={60} height={60} />
+
         <ul className="flex space-x-4">
           {user ? (
             <>
