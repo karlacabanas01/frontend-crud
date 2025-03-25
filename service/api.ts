@@ -2,7 +2,7 @@ import { LoginResponse, RegisterResponse } from "@/types/User";
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: process.env.API_URL_BACK + "/api/auth",
+  baseURL: `${process.env.API_URL_BACK}/api/auth`,
 });
 interface AxiosError {
   message: string;
