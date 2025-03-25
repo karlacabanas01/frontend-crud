@@ -31,17 +31,20 @@
 
 ### Instalar dependencias
 
-npm install
+`npm install`
 
 ### Configurar variables de entorno en .env.local
 
 - NEXT_PUBLIC_API_URL=http://localhost:3001
 - Construir e iniciar el frontend en el puerto 3001
 
-## Para ejecutar el proyecto
+## 🚀 Construir e iniciar el frontend (puerto 3001)
 
-npm run dev
+- Después de actualizar tu `.env.local` reinicia los contenedores para que Docker tome los nuevos valores:
+
+`docker-compose down`
+`docker-compose up -d --build`
 
 ## Autor
 
-📌 Desarrollado por @karlacabanas01 🚀
+📌 Desarrollado por @EquipoNabiProyect 🚀
