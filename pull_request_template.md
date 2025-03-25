@@ -19,20 +19,19 @@ Incluye un resumen claro de los cambios realizados en este Pull Request y la raz
 
 ---
 
-## 🧪 ¿Cómo probar estos cambios?
+## 🧪 ¿Cómo probar estos cambios? docker ps
 
 1. Ejecutar `docker-compose down && docker-compose up -d --build`
 2. Abrir `http://localhost:3001`
 3. Verificar que:
    - [ ] El frontend se levanta correctamente
-   - [ ] Las variables de entorno están aplicadas
    - [ ] La funcionalidad específica funciona como se espera
 
 ---
 
 ## 📷 Capturas de pantalla (si aplica)
 
-_Agrega capturas o grabaciones de pantalla para visualizar mejor los cambios._
+_Agrega capturas de pantalla o PDF para visualizar mejor los cambios._
 
 ---
 

@@ -35,10 +35,9 @@
 
 ### Configurar variables de entorno en .env.local
 
-- NEXT_PUBLIC_API_URL=http://localhost:3001
-- Construir e iniciar el frontend en el puerto 3001
+- API_URL_BACK=http://localhost:3000
 
-## 🚀 Construir e iniciar el frontend (puerto 3001)
+## 🚀 Construir e iniciar el frontend (puerto 3000)
 
 - Después de actualizar tu `.env.local` reinicia los contenedores para que Docker tome los nuevos valores:
 
