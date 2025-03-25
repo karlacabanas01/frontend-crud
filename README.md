@@ -42,8 +42,8 @@
 
 - Después de actualizar tu `.env.local` reinicia los contenedores para que Docker tome los nuevos valores:
 
-`docker-compose down`
-`docker-compose up -d --build`
+`docker compose down`
+`docker compose up -d --build`
 
 ## Autor
 
