@@ -26,22 +26,24 @@
 
 ### Clonar el repositorio
 
-git clone https://github.com/karlacabanas01/frontend-crud.git
-cd frontend-crud
+- git clone https://github.com/karlacabanas01/frontend-crud.git
+- cd frontend-crud
 
 ### Instalar dependencias
 
-npm install
+`npm install`
 
 ### Configurar variables de entorno en .env.local
 
-NEXT_PUBLIC_API_URL=http://localhost:3001
-Construir e iniciar el frontend en el puerto 3001
+- API_URL_BACK=http://localhost:3000
 
-## Para ejecutar el proyecto
+## 🚀 Construir e iniciar el frontend (puerto 3000)
 
-npm run dev
+- Después de actualizar tu `.env.local` reinicia los contenedores para que Docker tome los nuevos valores:
+
+`docker compose down`
+`docker compose up -d --build`
 
 ## Autor
 
-📌 Desarrollado por @karlacabanas01 🚀
+📌 Desarrollado por @EquipoNabiProyect 🚀
