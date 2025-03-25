@@ -31,7 +31,9 @@ export default function ProductList() {
       await fetchProducts();
     };
 
-    loadProducts();
+    loadProducts().catch((error) => {
+      console.error("Error cargando productos:", error);
+    });
   }, []);
 
   const handleDelete = async (id: number) => {
