@@ -27,6 +27,9 @@ export default function ProductList() {
   };
 
   useEffect(() => {
+    /**
+     * Carga los productos desde la API al montar el componente.
+     */
     const loadProducts = async () => {
       await fetchProducts();
     };

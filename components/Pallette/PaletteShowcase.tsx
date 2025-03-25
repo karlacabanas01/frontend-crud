@@ -2,6 +2,9 @@
 import React from "react";
 import ColorCard from "./ColorCard";
 
+/**
+ * Componente que muestra una vista general de los colores definidos en la paleta.
+ */
 const PaletteShowcase: React.FC = () => {
   return (
     <main className="h-screen flex flex-col items-center justify-center bg-gray-100">
