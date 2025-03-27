@@ -4,12 +4,22 @@ import axios from "axios";
 const api = axios.create({
   baseURL: `${process.env.API_URL_BACK}/api/auth`,
 });
+
 interface AxiosError {
   message: string;
   name: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   response: any;
 }
+
+/**
+ * Inicia sesión de usuario con email y contraseña.
+ *
+ * @param email - Email del usuario.
+ * @param password - Contraseña del usuario.
+ * @returns Los datos del usuario y token JWT.
+ * @throws Error si la autenticación falla o la respuesta es inválida.
+ */
 export const login = async (
   email: string,
   password: string
@@ -20,7 +30,7 @@ export const login = async (
       password,
     });
 
-    console.log("📌 Respuesta del backend:", response.data); // ✅ Verifica qué devuelve el backend
+    console.log("📌 Respuesta del backend:", response.data);
 
     if (!response.data || !response.data.user || !response.data.token) {
       console.error("❌ Datos faltantes en la respuesta:", response.data);
@@ -43,6 +53,15 @@ export const login = async (
   }
 };
 
+/**
+ * Registra un nuevo usuario.
+ *
+ * @param username - Nombre de usuario.
+ * @param email - Email del usuario.
+ * @param password - Contraseña del usuario.
+ * @returns Los datos del nuevo usuario.
+ * @throws Error si el registro falla.
+ */
 export const register = async (
   username: string,
   email: string,
@@ -69,7 +88,10 @@ export const register = async (
   }
 };
 
-export const logout = () => {
+/**
+ * Cierra la sesión del usuario eliminando datos del almacenamiento local.
+ */
+export const logout = (): void => {
   localStorage.removeItem("user");
   localStorage.removeItem("token");
 };
@@ -80,7 +102,6 @@ api.interceptors.request.use(
     const token = localStorage.getItem("token");
 
     if (token) {
-      // Asegurar que headers está definido
       config.headers = config.headers ?? {};
       config.headers.Authorization = `Bearer ${token}`;
     }

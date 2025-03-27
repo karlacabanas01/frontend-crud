@@ -27,13 +27,22 @@ export default function ProductList() {
   };
 
   useEffect(() => {
-    fetchProducts();
+    /**
+     * Carga los productos desde la API al montar el componente.
+     */
+    const loadProducts = async () => {
+      await fetchProducts();
+    };
+
+    loadProducts().catch((error) => {
+      console.error("Error cargando productos:", error);
+    });
   }, []);
 
   const handleDelete = async (id: number) => {
     try {
       await api.delete(`/products/${id}`);
-      fetchProducts(); // ✅ Recarga de productos después de eliminar
+      await fetchProducts();
     } catch (error) {
       console.error("Error al eliminar producto:", error);
     }
@@ -58,7 +67,8 @@ export default function ProductList() {
       };
 
       await api.put(`/products/${editingProduct.id}`, updatedProduct);
-      fetchProducts(); // ✅ Recarga productos después de actualizar
+      await fetchProducts();
+
       setEditingProduct(null);
     } catch (error) {
       console.error("Error al actualizar producto:", error);
